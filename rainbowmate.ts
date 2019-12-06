@@ -220,10 +220,21 @@ namespace sonar {
     }
 
     /**
+         * 启动温湿度、大气压传感器
+         */
+    //% blockId="BME280_SET_POWER_ON" block="启动温湿度大气压传感器"
+    //% weight=61 blockGap=8  advanced=true
+    export function setBME280PowerOn() {
+        setreg(0xF4, 0x2F)
+        initBME280();
+    }
+
+
+    /**
      * 使用温湿度大气压传感器，读取大气压值，单位：百帕（hPa）。标准大气压为：1013.25hPa，使用前请先开启温湿度大气压传感器
      */
     //% blockId="BME280_PRESSURE" block="大气压"
-    //% weight=80 blockGap=8
+    //% weight=80 blockGap=8  advanced=true
     export function pressure(): number {
         getBME280();
         return P;
@@ -233,7 +244,7 @@ namespace sonar {
      * 使用温湿度大气压传感器，读取温度，单位：摄氏度（℃）。使用前请先开启温湿度大气压传感器
      */
     //% blockId="BME280_TEMPERATURE" block="温度"
-    //% weight=80 blockGap=8
+    //% weight=80 blockGap=8  advanced=true
     export function temperature(): number {
         getBME280();
         return T;
@@ -243,7 +254,7 @@ namespace sonar {
      * 使用温湿度大气压传感器，读取湿度，单位：百分比（%）。使用前请先开启温湿度大气压传感器
      */
     //% blockId="BME280_HUMIDITY" block="湿度"
-    //% weight=80 blockGap=8    
+    //% weight=80 blockGap=8  advanced=true
     export function humidity(): number {
         getBME280();
         return H;
@@ -253,32 +264,26 @@ namespace sonar {
      * 使用温湿度大气压传感器，读取海拔高度，单位：米。使用前请先开启温湿度大气压传感器
      */
     //% blockId="BME280_ELEVATION" block="海拔高度"
-    //% weight=80 blockGap=8   
+    //% weight=80 blockGap=8  advanced=true
     export function elevation(): number {
         getBME280();
         return (1013.25 - P) * 9;
     }
 
-    /**
-     * 启动温湿度、大气压传感器
-     */
-    //% blockId="BME280_SET_POWER_ON" block="启动温湿度大气压传感器"
-    //% weight=61 blockGap=8
-    export function setBME280PowerOn() {
-        setreg(0xF4, 0x2F)
-        initBME280();
-        
-    }
-
+    
     /**
      * 停止温湿度、大气压传感器
      */
     //% blockId="BME280_SET_POWER_OFF" block="停止温湿度大气压传感器"
-    //% weight=61 blockGap=8
+    //% weight=61 blockGap=8 advanced=true
     export function setBME280PowerOff() {
         setreg(0xF4, 0x00)
     }
 
     
     /**********结束温湿度压力传感器**********/
+
+    /**********开始光照传感器传感器**********/
+
+    /**********结束光照传感器**********/
 }
