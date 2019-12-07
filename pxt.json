@@ -8,7 +8,7 @@
     "description": "teenkit 物联感知少儿编程",
     "files": [
         "README.md",
-        "custom.ts"
+        "rainbowmate.ts"
     ],
     "public": true,
     "license": "MIT",
