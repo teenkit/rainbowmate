@@ -1,0 +1,14 @@
+{
+    "name": "teenkit-apds9960",
+    "version": "0.0.1",
+    "description": "gesture recognition,apds9960",
+    "dependencies": {
+        "core": "*"
+    },
+    "files": [
+        "README.md",
+        "rainbowmate.ts"
+    ]
+    "public": true,
+    "license": "MIT"
+}
