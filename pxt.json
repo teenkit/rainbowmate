@@ -1,7 +1,7 @@
 {
-    "name": "teenkit-apds9960",
+    "name": "teenkit-rainbow mate",
     "version": "0.0.1",
-    "description": "gesture recognition,apds9960",
+    "description": "阶石物联感知少儿编程开发板：彩虹mate",
     "dependencies": {
         "core": "*"
     },
