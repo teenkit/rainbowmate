@@ -1,14 +1,16 @@
 {
-    "name": "teenkit-rainbow mate",
+    "name": "rainbow mate",
     "version": "0.0.1",
-    "description": "阶石物联感知少儿编程开发板：彩虹mate",
     "dependencies": {
-        "core": "*"
+        "core": "*",
+        "radio": "*"
     },
+    "description": "teenkit 物联感知少儿编程",
     "files": [
         "README.md",
-        "rainbowmate.ts"
+        "custom.ts"
     ],
     "public": true,
-    "license": "MIT"
+    "license": "MIT",
+    "preferredEditor": "tsprj"
 }
