@@ -13,16 +13,16 @@ enum PingUnit {
 
 /**
  * Sonar and ping utilities
- */ 
+ */
 //% color="#ff6600" weight=10 icon="\uf185" block="teenkit 物联感知"
-namespace sonar {
+namespace teenkit_rainbow_mate {
     /**
      * 超声波测距传感器：探测与障碍物之间的直线距离。
      * @param unit desired conversion unit
      * @param maxCmDistance maximum distance in centimeters (default is 500)
      */
     //% blockId="sonar_ping" block="超声波测距，单位 %unit"
-    //% weight=90 blockGap=16
+    //% weight=99 blockGap=16
     export function ping(unit: PingUnit, maxCmDistance = 500): number {
         // send pulse
         pins.setPull(DigitalPin.P15, PinPullMode.PullNone);
@@ -46,65 +46,75 @@ namespace sonar {
      * 人体红外传感器,检测人体移动（出现或者位移），发现：true,未发现：false
      */
     //% blockId="human_ir" block="发现人移动"
-    //% weight=90 blockGap=16
-    export function humanIR(): boolean{
-        return pins.digitalReadPin(DigitalPin.P13)==1? true:false
+    //% weight=98 blockGap=16
+    export function humanIR(): boolean {
+        return pins.digitalReadPin(DigitalPin.P13) == 1 ? true : false
     }
 
     /**
      * 红外遮挡传感器,有效距离10厘米，对黑色物体无效。被遮挡：true;未遮挡：false；
      */
     //% blockId="block_ir" block="被遮挡"
-    //% weight=90 blockGap=16
-    export function blockIR():boolean{
-        return pins.digitalReadPin(DigitalPin.P16)==1? true:false
+    //% weight=97 blockGap=16
+    export function blockIR(): boolean {
+        return pins.digitalReadPin(DigitalPin.P16) == 1 ? true : false
     }
 
     /**
      * 震动马达，数值越大，转速越快
      */
     //% blockId="micro_motor" block="马达震动，转速：%speed"
-    //% weight=90 blockGap=16
+    //% weight=95 blockGap=16
     //% speed.min=0 speed.max=1023
-    export function motor(speed:number):void{
+    export function motor(speed: number): void {
         pins.analogWritePin(AnalogPin.P2, speed)
     }
 
     /**
      * 噪音传感器
      */
-    //% blockId="micro_motor" block="噪音数值"
-    //% weight=90 blockGap=16
-    export function microphone():number{
+    //% blockId="microphone" block="噪音数值"
+    //% weight=96 blockGap=16
+    export function microphone(): number {
         return pins.analogReadPin(AnalogPin.P1)
     }
 
+    /*******开始光照传感器************/
+    let BH1750_STATUS = 0;
     /**
      * 开启光照强度传感器
      */
     //% blockId="BH1750_ON" block="开启光照传感器"
-    //% weight=90 blockGap=8
-    export function on(): void {
-        pins.i2cWriteNumber(0x5C, 0x10, NumberFormat.UInt8BE)
+    //% weight=89 blockGap=8  advanced=true
+    export function BH1750_on(): void {
+        pins.i2cWriteNumber(0x5C, 0x10, NumberFormat.UInt8BE);
+        BH1750_STATUS = 1;
     }
 
     /**
      * 关闭光照强度传感器
      */
     //% blockId="BH1750_OFF" block="关闭光照传感器"
-    //% weight=90 blockGap=8
-    export function off(): void {
-        pins.i2cWriteNumber(0x5C, 0, NumberFormat.UInt8BE)
+    //% weight=87 blockGap=38 advanced=true
+    export function BH1750_off(): void {
+        if (BH1750_STATUS == 1) {
+            pins.i2cWriteNumber(0x5C, 0, NumberFormat.UInt8BE);
+            BH1750_STATUS = 0;
+        }
     }
 
     /**
      * 读取环境光数值，单位：勒克斯（lx）, 使用前需要先开启光照传感器
      */
     //% blockId="BH1750_GET_INTENSITY" block="光线强度"
-    //% weight=80 blockGap=8
+    //% weight=88 blockGap=8  advanced=true
     export function getIntensity(): number {
+        if (BH1750_STATUS == 0) {
+            BH1750_on();
+        }
         return Math.idiv(pins.i2cReadNumber(0x5C, NumberFormat.UInt16BE) * 5, 6)
     }
+    /*******结束光照传感器************/
 
     /*******温湿度传感器************/
 
@@ -223,7 +233,7 @@ namespace sonar {
          * 启动温湿度、大气压传感器
          */
     //% blockId="BME280_SET_POWER_ON" block="启动温湿度大气压传感器"
-    //% weight=61 blockGap=8  advanced=true
+    //% weight=79 blockGap=8  advanced=true
     export function setBME280PowerOn() {
         setreg(0xF4, 0x2F)
         initBME280();
@@ -234,7 +244,7 @@ namespace sonar {
      * 使用温湿度大气压传感器，读取大气压值，单位：百帕（hPa）。标准大气压为：1013.25hPa，使用前请先开启温湿度大气压传感器
      */
     //% blockId="BME280_PRESSURE" block="大气压"
-    //% weight=80 blockGap=8  advanced=true
+    //% weight=78 blockGap=8  advanced=true
     export function pressure(): number {
         getBME280();
         return P;
@@ -244,7 +254,7 @@ namespace sonar {
      * 使用温湿度大气压传感器，读取温度，单位：摄氏度（℃）。使用前请先开启温湿度大气压传感器
      */
     //% blockId="BME280_TEMPERATURE" block="温度"
-    //% weight=80 blockGap=8  advanced=true
+    //% weight=77 blockGap=8  advanced=true
     export function temperature(): number {
         getBME280();
         return T;
@@ -254,7 +264,7 @@ namespace sonar {
      * 使用温湿度大气压传感器，读取湿度，单位：百分比（%）。使用前请先开启温湿度大气压传感器
      */
     //% blockId="BME280_HUMIDITY" block="湿度"
-    //% weight=80 blockGap=8  advanced=true
+    //% weight=76 blockGap=8  advanced=true
     export function humidity(): number {
         getBME280();
         return H;
@@ -264,26 +274,177 @@ namespace sonar {
      * 使用温湿度大气压传感器，读取海拔高度，单位：米。使用前请先开启温湿度大气压传感器
      */
     //% blockId="BME280_ELEVATION" block="海拔高度"
-    //% weight=80 blockGap=8  advanced=true
+    //% weight=75 blockGap=8  advanced=true
     export function elevation(): number {
         getBME280();
         return (1013.25 - P) * 9;
     }
 
-    
+
     /**
      * 停止温湿度、大气压传感器
      */
     //% blockId="BME280_SET_POWER_OFF" block="停止温湿度大气压传感器"
-    //% weight=61 blockGap=8 advanced=true
+    //% weight=74 blockGap=38 advanced=true
     export function setBME280PowerOff() {
         setreg(0xF4, 0x00)
     }
 
-    
+
     /**********结束温湿度压力传感器**********/
 
-    /**********开始光照传感器传感器**********/
+    /**********开始RTC时钟**********/
+    let DS1388_I2C_ADDR = 104;
 
-    /**********结束光照传感器**********/
+    let DS1388_REG_CTRL = 7
+    let DS1388_REG_RAM = 8
+
+    export enum DS1388_FIELD {
+        //% block=年
+        YEAR = 6,
+        //% block=月
+        MONTH = 5,
+        //% block=日
+        DAY = 4,
+        //% block=星期
+        WEEKDAY = 3,
+        //% block=小时
+        HOUR = 2,
+        //% block=分钟
+        MINUTE = 1,
+        //% block=秒
+        SECOND = 0
+    }
+
+    /**
+     * set ds1388's reg
+     */
+    function setDs1388Reg(reg: number, dat: number): void {
+        let buf = pins.createBuffer(2);
+        buf[0] = reg;
+        buf[1] = dat;
+        pins.i2cWriteBuffer(DS1388_I2C_ADDR, buf);
+    }
+
+    /**
+     * get ds1388's reg
+     */
+    function getDs1388Reg(reg: number): number {
+        pins.i2cWriteNumber(DS1388_I2C_ADDR, reg, NumberFormat.UInt8BE);
+        return pins.i2cReadNumber(DS1388_I2C_ADDR, NumberFormat.UInt8BE);
+    }
+
+    /**
+     * convert a Hex data to Dec
+     */
+    function HexToDec(dat: number): number {
+        return (dat >> 4) * 10 + (dat % 16);
+    }
+
+    /**
+     * convert a Dec data to Hex
+     */
+    function DecToHex(dat: number): number {
+        return Math.idiv(dat, 10) * 16 + (dat % 10)
+    }
+
+    /**
+     * 启动时钟
+     */
+    //% blockId="DS1388_START" block="开始时钟"
+    //% weight=66 blockGap=8 advanced=true
+    export function startDs1388() {
+        let t = getField(DS1388_FIELD.SECOND);
+        setField(DS1388_FIELD.SECOND, t & 0x7f);
+
+    }
+
+    /**
+     * 暂停时钟
+     */
+    //% blockId="DS1388_STOP" block="暂停时钟"
+    //% weight=65 blockGap=38 advanced=true
+    export function stopDs1388() {
+        let t = getField(DS1388_FIELD.SECOND);
+        setField(DS1388_FIELD.SECOND, t & 0x80);
+
+    }
+
+
+
+    /**
+     * 分类型设置时钟
+     * @param type is the field will be set, eg: year
+     * @param dat is the Year will be set, eg: 2019
+     */
+    //% blockId="DS1388_SET_Field" block="时钟设置 %type| 为：%dat"
+    //% weight=67 blockGap=8 advanced=true
+    export function setField(type: DS1388_FIELD, dat: number): void {
+        let val = dat;
+        switch (type) {
+            case DS1388_FIELD.YEAR:
+                val = DecToHex(dat % 100);
+                break;
+            case DS1388_FIELD.MONTH:
+                val = DecToHex(dat % 13);
+                break;
+            case DS1388_FIELD.DAY:
+                val = DecToHex(dat % 32);
+                break;
+            case DS1388_FIELD.WEEKDAY:
+                val = DecToHex(dat % 8);
+                break;
+            case DS1388_FIELD.HOUR:
+                val = DecToHex(dat % 24);
+                break;
+            case DS1388_FIELD.MINUTE:
+                val = DecToHex(dat % 60);
+                break;
+            case DS1388_FIELD.SECOND:
+                val = DecToHex(dat % 60);
+                break;
+        }
+        setDs1388Reg(type, val)
+    }
+
+    /**
+     * 读取时钟数据
+     */
+    //% blockId="DS1388_GET_FIELD" block="读取时钟时间 %field"
+    //% weight=68 blockGap=8 advanced=true
+    export function getField(field: DS1388_FIELD): number {
+        if (field == DS1388_FIELD.YEAR) {
+            return HexToDec(getDs1388Reg(field)) + 2000
+        }
+        return HexToDec(getDs1388Reg(field))
+    }
+
+
+    /**
+     * 初始化时钟的日期和时间
+     * @param year is the Year will be set, eg: 2019
+     * @param month is the Month will be set, eg: 11
+     * @param day is the Day will be set, eg: 17
+     * @param weekday is the Weekday will be set, eg: 1
+     * @param hour is the Hour will be set, eg: 8
+     * @param minute is the Minute will be set, eg: 30
+     * @param second is the Second will be set, eg: 59
+     */
+    //% blockId="DS1388_SET_DATETIME" block="RTC时钟设置 年 %year|月 %month|日 %day|星期 %weekday|时 %hour|分 %minute|秒 %second"
+    //% weight=69 blockGap advanced=true
+    export function DateTime(year: number, month: number, day: number, weekday: number, hour: number, minute: number, second: number): void {
+        let buf = pins.createBuffer(8);
+        buf[0] = DS1388_FIELD.SECOND;
+        buf[1] = DecToHex(second % 60);
+        buf[2] = DecToHex(minute % 60);
+        buf[3] = DecToHex(hour % 24);
+        buf[4] = DecToHex(weekday % 8);
+        buf[5] = DecToHex(day % 32);
+        buf[6] = DecToHex(month % 13);
+        buf[7] = DecToHex(year % 100);
+        pins.i2cWriteBuffer(DS1388_I2C_ADDR, buf)
+    }
+
+
+    /**********结束RTC时钟**********/
 }
