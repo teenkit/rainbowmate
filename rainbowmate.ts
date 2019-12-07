@@ -3,19 +3,17 @@
  * 超声波测距返回值的单位
  */
 enum PingUnit {
-    //% block="微秒"
-    MicroSeconds,
     //% block="厘米"
     Centimeters,
+    //% block="微秒"
+    MicroSeconds,    
     //% block="英寸"
     Inches
 }
 
-/**
- * Sonar and ping utilities
- */
+
 //% color="#ff6600" weight=10 icon="\uf185" block="teenkit 物联感知"
-namespace teenkitRainbowMate {
+namespace teenkitRainbowMate{
     /**
      * 超声波测距传感器：探测与障碍物之间的直线距离。
      * @param unit desired conversion unit
@@ -110,7 +108,7 @@ namespace teenkitRainbowMate {
     //% weight=88 blockGap=8  advanced=true
     export function getIntensity(): number {
         if (BH1750_STATUS == 0) {
-            BH1750_on();
+            BH1750On();
         }
         return Math.idiv(pins.i2cReadNumber(0x5C, NumberFormat.UInt16BE) * 5, 6)
     }
@@ -1280,7 +1278,7 @@ namespace teenkitRainbowMate {
      */
     //% blockId="gesture_init" block="初始化手势传感器"
     //% weight=59 blockGap=8 advanced=true
-    export function init() {
+    export function initGesture() {
         let apds9960 = new APDS9960();
         apds9960.pads9960_init();
         apds9960.enableGestureSensor(false);
@@ -1309,13 +1307,13 @@ namespace teenkitRainbowMate {
         * @param gesture type of gesture to detect
         * @param handler code to run
         */
-    //% blockId="gesture_listener_block" block="检测手势|%gesture"
+    //% blockId="gesture_listener_block" block="检测到手势|%gesture"
     //% weight=58 blockGap=38 advanced=true
     export function onGesture(gesture: GESTURE_TYPE, handler: () => void) {
         control.onEvent(3100, gesture, handler);
 
     }
 
-
     /**********结束手势传感器**********/
 }
+ 
