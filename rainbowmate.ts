@@ -15,7 +15,7 @@ enum PingUnit {
  * Sonar and ping utilities
  */
 //% color="#ff6600" weight=10 icon="\uf185" block="teenkit 物联感知"
-namespace teenkit_rainbow_mate {
+namespace teenkitRainbowMate {
     /**
      * 超声波测距传感器：探测与障碍物之间的直线距离。
      * @param unit desired conversion unit
@@ -86,7 +86,7 @@ namespace teenkit_rainbow_mate {
      */
     //% blockId="BH1750_ON" block="开启光照传感器"
     //% weight=89 blockGap=8  advanced=true
-    export function BH1750_on(): void {
+    export function BH1750On(): void {
         pins.i2cWriteNumber(0x5C, 0x10, NumberFormat.UInt8BE);
         BH1750_STATUS = 1;
     }
@@ -96,7 +96,7 @@ namespace teenkit_rainbow_mate {
      */
     //% blockId="BH1750_OFF" block="关闭光照传感器"
     //% weight=87 blockGap=38 advanced=true
-    export function BH1750_off(): void {
+    export function BH1750Off(): void {
         if (BH1750_STATUS == 1) {
             pins.i2cWriteNumber(0x5C, 0, NumberFormat.UInt8BE);
             BH1750_STATUS = 0;
