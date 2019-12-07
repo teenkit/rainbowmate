@@ -1,5 +1,5 @@
 {
-    "name": "rainbow mate",
+    "name": "rainbowmate",
     "version": "0.0.1",
     "dependencies": {
         "core": "*",
@@ -11,6 +11,5 @@
         "rainbowmate.ts"
     ],
     "public": true,
-    "license": "MIT",
-    "preferredEditor": "tsprj"
+    "license": "MIT"
 }
